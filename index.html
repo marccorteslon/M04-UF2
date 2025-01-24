@@ -21,31 +21,46 @@
 
     let game = new Phaser.Game(config);
 
-    let rect;
-    let cursors;
+    //let rect;
+		//let rect_dir = 1;
+
+		let huevera_b, huvera_m, huevera_d;
+		let huevo;
 
     function precarga () {
-
+			this.load.image('huevera', 'huevera.png', 'huevo', 'huevo.png');
     }
 
     function crea () {
-      rect = this.add.rectangle(400, 225, 32, 32, 0xffffff);
+      //rect = this.add.rectangle(400, 225, 32, 32, 0xffffff);
+   
+			let marron = Phaser.Display.Color.GetColor(192, 168, 16);
 
-      cursors = this.input.keyboard.createCursorKeys();
+			huevera_b = this.add.image(400, 160, 'huevera');
+
+			huevera_b.setScale(.5);
+			huevera_b.setTint(Phaser.Display.Color.GetColor(marron));
+
+			huevo = this.add.image(400, 160, 'huevo');
+
+			huevo.setScale(.5);
+
+			huevo_b.setTint(Phaser.Display.Color.GetColor(marron));
+
+this.add.image(400, 160, 'huevera');
+this.add.image(400, 160, 'huevo');
+	
+	 }
+    function actualiza () {
+ 
     }
 
-    function actualiza () {
-      if (cursors.left.isDown) {
-        rect.x -= 2;
-      }
-      if (cursors.right.isDown) {
-        rect.x += 2;
-      }
-      if (cursors.up.isDown) {
-        rect.y -= 2;
-      }
-      if (cursors.down.isDown) {
-        rect.y += 2;
+    function actualiza_rect () {
+      
+			rect.x += rect_dir;
+
+      if (rect.x <= 0 || rect.x >= canvas_w) {
+        rect_dir = -rect_dir;
       }
     }
 
