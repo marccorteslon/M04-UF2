@@ -10,6 +10,7 @@
     let canvas_h = 450;
 
     let config = {
+      type: Phaser.AUTO,
       width: canvas_w,
       height: canvas_h,
       scene: {
@@ -20,48 +21,51 @@
     };
 
     let game = new Phaser.Game(config);
-
-    //let rect;
-		//let rect_dir = 1;
-
-		let huevera_b, huvera_m, huevera_d;
-		let huevo;
-
+    let huevos = [];
+    
     function precarga () {
-			this.load.image('huevera', 'huevera.png', 'huevo', 'huevo.png');
+      this.load.image('huevera', 'huevera.png');
+      this.load.image('huevo', 'huevo.png');
     }
 
     function crea () {
-      //rect = this.add.rectangle(400, 225, 32, 32, 0xffffff);
-   
-			let marron = Phaser.Display.Color.GetColor(192, 168, 16);
+      let marron = Phaser.Display.Color.GetColor(192, 168, 16);
+      let dorado = Phaser.Display.Color.GetColor(152, 168, 16);
 
-			huevera_b = this.add.image(400, 160, 'huevera');
+      let huevera_x = 150;
+      let huevera_y_start = 200;
+      let huevera_spacing = 60;
 
-			huevera_b.setScale(.5);
-			huevera_b.setTint(Phaser.Display.Color.GetColor(marron));
-
-			huevo = this.add.image(400, 160, 'huevo');
-
-			huevo.setScale(.5);
-
-			huevo_b.setTint(Phaser.Display.Color.GetColor(marron));
-
-this.add.image(400, 160, 'huevera');
-this.add.image(400, 160, 'huevo');
-	
-	 }
-    function actualiza () {
- 
+      this.add.image(huevera_x, huevera_y_start, 'huevera').setScale(0.5);
+      this.add.image(huevera_x, huevera_y_start + huevera_spacing, 'huevera').setScale(0.5).setTint(marron);
+      this.add.image(huevera_x, huevera_y_start + 2 * huevera_spacing, 'huevera').setScale(0.5).setTint(dorado);
+      
+      // Generar huevos de forma periódica
+      this.time.addEvent({
+        delay: 1000,
+        callback: generarHuevo,
+        callbackScope: this,
+        loop: true
+      });
     }
 
-    function actualiza_rect () {
-      
-			rect.x += rect_dir;
+    function generarHuevo() {
+      let colores = [null, 0xC0A810, 0x98A810];
+      let x = Phaser.Math.Between(200, canvas_w - 50);
+      let huevo = game.scene.scenes[0].add.image(x, 50, 'huevo').setScale(0.5);
+      let color = Phaser.Math.RND.pick(colores);
+      if (color) huevo.setTint(color);
+      huevos.push(huevo);
+    }
 
-      if (rect.x <= 0 || rect.x >= canvas_w) {
-        rect_dir = -rect_dir;
-      }
+    function actualiza () {
+      huevos.forEach(huevo => {
+        huevo.y += 2;
+        if (huevo.y > canvas_h) {
+          huevo.destroy();
+        }
+      });
+      huevos = huevos.filter(huevo => huevo.y <= canvas_h);
     }
 
     </script>
@@ -69,3 +73,5 @@ this.add.image(400, 160, 'huevo');
   <body>
   </body>
 </html>
+
+
